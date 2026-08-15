@@ -22,7 +22,7 @@ MCP Conformance Lab يحول اختبار خادم MCP من جلسة يدوية 
 | النقل | `stdio` وStreamable HTTP عبر MCP Python SDK |
 | الاكتشاف | handshake، protocol version، server info، capabilities، tools، resources، prompts، pagination |
 | القواعد | uniqueness، JSON Schema validity، capability consistency |
-| baseline | canonical snapshot، SHA-256 digest، كشف الإضافة والحذف والتغيير |
+| baseline | canonical snapshot، SHA-256 digest، كشف الإضافة والحذف والتغيير، والإبلاغ الصريح عن baseline المفقود أو غير الصالح |
 | الأدلة | `contract.json`، `results.json`، `run.json`، `manifest.sha256` |
 | التقارير | terminal، JSON، SARIF 2.1.0 |
 | الأمان | stdio معطل افتراضيًا، argv بلا shell، بيئة محدودة، timeouts، حدود items وoutput، headers من environment |
@@ -59,7 +59,7 @@ mcp-conformance baseline --config examples/fixture.yaml
 mcp-conformance check --config examples/fixture.yaml --format sarif
 ```
 
-سيُحفظ baseline في `.mcp-lab/fixture-baseline.json`، وستُحفظ حزمة evidence تحت `.mcp-lab/runs/`. للتحقق من سلامة أحدث حزمة:
+سيُحفظ baseline في `.mcp-lab/fixture-baseline.json`، وستُحفظ حزمة evidence تحت `.mcp-lab/runs/`. إذا كان baseline مضبوطًا في الإعداد لكنه مفقود أو غير صالح، يفشل الفحص بـ finding صريح (`MCP-BASELINE-MISSING` أو `MCP-BASELINE-INVALID`) بدل تجاهل المقارنة. للتحقق من سلامة أحدث حزمة:
 
 ```bash
 mcp-conformance verify .mcp-lab/runs/<run-id>

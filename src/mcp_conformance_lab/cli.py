@@ -8,8 +8,11 @@ from typing import Literal, NoReturn
 import anyio
 import typer
 
-from .application.compare import compare_snapshots
-from .application.service import discover_target, read_baseline, write_baseline
+from .application.service import (
+    compare_with_baseline,
+    discover_target,
+    write_baseline,
+)
 from .application.snapshot import snapshot_bytes
 from .config.loader import load_config
 from .config.schema import LabConfig
@@ -77,9 +80,7 @@ def _collect_findings(
     config = _load(config_path)
     try:
         snapshot, findings = anyio.run(discover_target, config)
-        if config.baseline is not None and config.baseline.is_file():
-            baseline = read_baseline(config.baseline)
-            findings = findings + compare_snapshots(snapshot, baseline)
+        findings = findings + compare_with_baseline(config.name, snapshot, config.baseline)
         return config, snapshot, findings
     except ConformanceError as error:
         _fail(error)
