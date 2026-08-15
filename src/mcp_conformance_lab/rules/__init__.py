@@ -1,0 +1,1 @@
+"""Deterministic MCP conformance rules."""
