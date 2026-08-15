@@ -24,4 +24,4 @@ def test_version_option_reports_package_version() -> None:
     result = runner.invoke(app, ["--version"])
 
     assert result.exit_code == 0
-    assert "mcp-conformance 0.1.0" in result.stdout
+    assert "mcp-conformance 0.1.1" in result.stdout

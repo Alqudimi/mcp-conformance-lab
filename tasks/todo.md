@@ -198,9 +198,27 @@
 
 **Estimated scope:** Large.
 
+### Task 11: Explicit baseline failure semantics
+
+**Description:** Treat a configured-but-missing, unreadable, or invalid baseline as a machine-readable conformance finding instead of silently skipping comparison or terminating before evidence/report generation.
+
+**Acceptance criteria:**
+- [x] A configured missing baseline produces `MCP-BASELINE-MISSING` with high severity and error status.
+- [x] A malformed baseline produces `MCP-BASELINE-INVALID` with high severity and error status.
+- [x] A valid baseline continues through the existing deterministic comparator.
+
+**Verification:** `python -m pytest -q`, `ruff check src tests`, `ruff format --check src tests`, `mypy src`, and `python -m build`.
+
+**Dependencies:** Tasks 5, 7, and 8.
+
+**Files touched:** `src/mcp_conformance_lab/application/service.py`, `src/mcp_conformance_lab/cli.py`, `tests/unit/test_baseline.py`.
+
+**Estimated scope:** Small.
+
 ### Checkpoint: Release candidate
 
 - [ ] clean install/build/test/lint/type/security/docs checks pass.
+- [x] baseline configuration failures are explicit, typed, and tested.
 - [ ] README demo and baseline regression flow pass.
 - [ ] package metadata and license are correct.
 - [ ] repository is ready for publication.
