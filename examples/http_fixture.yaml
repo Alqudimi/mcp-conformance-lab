@@ -1,0 +1,18 @@
+schema_version: 1
+name: http-fixture
+transport:
+  kind: streamable_http
+  url: http://127.0.0.1:8765/mcp
+policy:
+  connect_timeout_seconds: 10
+  case_timeout_seconds: 5
+  max_output_bytes: 1048576
+  max_items: 1000
+  fail_on: high
+baseline: ../.mcp-lab/http-fixture-baseline.json
+reports:
+  directory: ../.mcp-lab/runs
+  formats:
+    - terminal
+    - json
+    - sarif
