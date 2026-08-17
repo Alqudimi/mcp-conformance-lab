@@ -21,7 +21,7 @@ MCP Conformance Lab يحول اختبار خادم MCP من جلسة يدوية 
 |---|---|
 | النقل | `stdio` وStreamable HTTP عبر MCP Python SDK |
 | الاكتشاف | handshake، protocol version، server info، capabilities، tools، resources، prompts، pagination |
-| القواعد | uniqueness، JSON Schema validity، capability consistency |
+| القواعد | uniqueness، JSON Schema validity، capability consistency، policy size limits |
 | baseline | canonical snapshot، SHA-256 digest، كشف الإضافة والحذف والتغيير، والإبلاغ الصريح عن baseline المفقود أو غير الصالح |
 | الأدلة | `contract.json`، `results.json`، `run.json`، `manifest.sha256` |
 | التقارير | terminal، JSON، SARIF 2.1.0 |
