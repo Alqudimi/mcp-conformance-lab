@@ -149,10 +149,54 @@ class CapabilityConsistencyRule:
         )
 
 
+class SizeLimitsRule:
+    """Ensure advertised collections stay within the configured policy bounds.
+
+    The execution policy declares ``max_items`` as a hard contract ceiling, but
+    without this rule a server advertising more tools, resources, or prompts
+    than the client policy permits would silently exceed the limit. This rule
+    closes that gap by failing loudly when any collection exceeds the limit.
+    """
+
+    rule_id = "MCP-CONTRACT-004"
+
+    def evaluate(self, context: RuleContext) -> Finding:
+        """Report when advertised collections exceed ``policy.max_items``."""
+        limit = context.policy.max_items
+        collections: tuple[tuple[str, int], ...] = (
+            ("tools", len(context.snapshot.tools)),
+            ("resources", len(context.snapshot.resources)),
+            ("prompts", len(context.snapshot.prompts)),
+        )
+        exceeded = [f"{label} ({count}/{limit})" for label, count in collections if count > limit]
+        if exceeded:
+            return _result(
+                self.rule_id,
+                context,
+                FindingStatus.FAILED,
+                Severity.HIGH,
+                "Advertised collection exceeds policy size limit",
+                "The following collections exceed the configured limit: "
+                + ", ".join(sorted(exceeded)),
+                "Reduce advertised tools, resources, or prompts below the "
+                f"configured limit of {limit} or raise policy.max_items.",
+            )
+        return _result(
+            self.rule_id,
+            context,
+            FindingStatus.PASSED,
+            Severity.INFO,
+            "Advertised collections respect policy size limits",
+            "All advertised tool, resource, and prompt collections are below "
+            f"the configured limit of {limit}.",
+        )
+
+
 DEFAULT_RULES: tuple[ConformanceRule, ...] = (
     UniqueIdentifiersRule(),
     ToolSchemaRule(),
     CapabilityConsistencyRule(),
+    SizeLimitsRule(),
 )
 
 

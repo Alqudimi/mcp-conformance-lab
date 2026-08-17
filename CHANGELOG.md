@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- `SizeLimitsRule` (`MCP-CONTRACT-004`) fails loudly when advertised tools, resources, or prompts exceed `policy.max_items`, closing the gap where the size policy was declared but never enforced by any rule.
+- Rule unit tests covering pass, boundary, and per-collection failure cases (`tests/unit/test_rules.py`).
+
 ## [0.1.1] - 2026-08-16
 
 ### Fixed
