@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- CLI failures now map to the documented exit-code contract: configuration errors exit with 2, transport and protocol failures with 4, and evidence persistence failures with 5.
+
 ## [0.1.1] - 2026-08-16
 
 ### Fixed

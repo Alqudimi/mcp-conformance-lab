@@ -16,7 +16,13 @@ from .application.service import (
 from .application.snapshot import snapshot_bytes
 from .config.loader import load_config
 from .config.schema import LabConfig
-from .domain.errors import ConformanceError
+from .domain.errors import (
+    ConfigurationError,
+    ConformanceError,
+    EvidenceError,
+    ProtocolError,
+    TransportError,
+)
 from .domain.models import ContractSnapshot, Finding, RunReport
 from .domain.policies import exit_code_for_findings
 from .evidence.bundle import EvidenceBundleWriter, verify_bundle
@@ -59,10 +65,21 @@ def callback(
     """Inspect MCP server contracts without sending data to external analyzers."""
 
 
+def _failure_exit_code(error: ConformanceError) -> int:
+    """Map typed failures to the documented CLI exit-code contract."""
+    if isinstance(error, ConfigurationError):
+        return 2
+    if isinstance(error, EvidenceError):
+        return 5
+    if isinstance(error, (TransportError, ProtocolError)):
+        return 4
+    return 4
+
+
 def _fail(error: ConformanceError) -> NoReturn:
     """Render one expected failure without exposing implementation details."""
     typer.echo(f"Error [{error.code}]: {error.message}", err=True)
-    raise typer.Exit(code=4)
+    raise typer.Exit(code=_failure_exit_code(error))
 
 
 def _load(path: Path) -> LabConfig:
